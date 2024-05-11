@@ -41,7 +41,7 @@ Xtrain, Xtest, Ytrain, Ytest = train_test_split(x, y, test_size=0.2, random_stat
 xgb_params = {
     'booster': 'gbtree', 
     'objective': 'binary:logistic',
-    'n_estimators': 400,  
+    'n_estimators': 200,  
     'max_depth': 8, 
     'lambda': 10,  
     'subsample': 0.7, 

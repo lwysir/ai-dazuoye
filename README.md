@@ -79,6 +79,6 @@ plt.title('Receiver Operating Characteristic - Test Set')
 plt.legend(loc="lower right")
 plt.show()
 ```
-
+![dataset](./images/xgboost-roc.png)
 
 

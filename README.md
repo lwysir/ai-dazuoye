@@ -26,6 +26,7 @@ print(train_df['target'].value_counts())
 train_df['target'].value_counts().plot(kind='bar')
 plt.show()
 ```
+![dataset](./images/5G-pre.png)
 * 数据预处理，提取特征矩阵x和标签y
 ```
 x = train_df.iloc[:, 1:-1]  

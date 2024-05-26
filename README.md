@@ -33,7 +33,7 @@ df['target'].value_counts()
 df['target'].value_counts().plot(kind='pie',autopct='%.3f%%')
 ```
 
-![image-20240526173838382](README.assets/image-20240526173838382.png)
+![image-20240526194446768](images/image-20240526194446768.png)
 
 ### （3）拆分数据集并训练模型
 
@@ -115,7 +115,7 @@ plt.legend(loc='lower right')
 plt.show()
 ```
 
-![image-20240526174504688](README.assets/image-20240526174504688.png)
+![image-20240526194528415](images/image-20240526194528415.png)
 
 ## 2.xgboost模型
 

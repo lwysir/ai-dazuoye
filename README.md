@@ -1,8 +1,8 @@
 ## 1.LogisticRegression模型
 
-### （1）包和库
+### （1）Packages and Libraries
 
-- 导入所需要的包
+- Import the Required Packages
 
 ```
 import pandas as pd
@@ -17,15 +17,15 @@ from sklearn.preprocessing import MinMaxScaler
 from imblearn.over_sampling import SMOTE
 ```
 
-### （2）数据准备并分析
+### （2）Data Preparation and Analysis
 
-- 导入原始数据集
+- Import the Raw Dataset
 
 ```
 df = pd.read_csv(r'D:\develop\train.csv')
 ```
 
-- 绘制饼状图显示5G用户分类的情况
+- Plot a Pie Chart to Show the Classification of 5G Users
 
 ```
 df.describe()
@@ -35,29 +35,29 @@ df['target'].value_counts().plot(kind='pie',autopct='%.3f%%')
 
 ![image-20240526194446768](images/image-20240526194446768.png)
 
-### （3）拆分数据集并训练模型
+### （3）Split the Dataset and Train the Model
 
-- 提取特征矩阵和标签
+- Extract the Feature Matrix and Labels
 
 ```
 x = df.iloc[:, 1:-1]
 y = df.iloc[:, -1]
 ```
 
--  切分训练集和测试集, 并且进行随机数打乱
+-  Split the Training and Test Sets and Shuffle the Data
 
 ```
 Xtrain, Xtest, Ytrain, Ytest = train_test_split(x, y, test_size=0.3, random_state=12)
 ```
 
--  重置训练集和测试集的索引
+-  Reset the Index of the Training and Test Sets
 
 ```
 for i in [Xtrain, Xtest, Ytrain, Ytest]:
     i.reset_index(drop=True, inplace=True)
 ```
 
--  对所有特征进行归一化处理
+-  Normalize All Features
 
 ```
 mms = MinMaxScaler()
@@ -65,14 +65,14 @@ Xtrain = pd.DataFrame(mms.fit_transform(Xtrain), columns=Xtrain.columns)
 Xtest = pd.DataFrame(mms.transform(Xtest), columns=Xtest.columns)
 ```
 
-- 对训练集进行过采样
+- Oversampling the Training Set
 
 ```
 model_smote = SMOTE()
 Xtrain, Ytrain = model_smote.fit_resample(Xtrain, Ytrain)
 ```
 
-- 训练逻辑回归模型，尝试使用 'saga' 优化算法并增加迭代次数
+- Train a Logistic Regression Model with 'saga' Solver and Increased Maximum Iterations
 
 ```
 clf = LR(max_iter=20000, C=9.4, solver='saga')
@@ -82,15 +82,15 @@ print('训练集上的预测准确率为：', clf.score(Xtrain, Ytrain))
 print('测试集上的预测准确率为：', clf.score(Xtest, Ytest))
 ```
 
-### （4）性能评估
+### （4）Performance Evaluation
 
-- 输出混淆矩阵
+- Output the Confusion Matrix
 
 ```
 print('混淆矩阵：\n', confusion_matrix(Ytest, clf.predict(Xtest)))
 ```
 
-- 查看测试集上AUC面积
+- Check the AUC score on the test set
 
 ```
 area = roc_auc_score(Ytest, clf.predict_proba(Xtest)[:, 1])
@@ -99,7 +99,7 @@ print('AUC面积为：', area)
 print(classification_report(Ytest, clf.predict(Xtest)))
 ```
 
-- 绘制ROC曲线
+- Plot the ROC curve
 
 ```
 FPR, recall, thresholds = roc_curve(Ytest, clf.predict_proba(Xtest)[:, 1])
@@ -119,12 +119,12 @@ plt.show()
 
 ## 2.xgboost模型
 
-#### (1)包和库
-* 最核心的算法库
+#### (1)Packages and Libraries
+* The most core algorithm libraries
 ```
 from xgboost import XGBClassifier
 ```
-* 导入其他必要的库
+* Import other necessary libraries
 ```
 from IPython.display import display
 import pandas as pd
@@ -132,32 +132,32 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split, KFold
 from sklearn.metrics import roc_auc_score, roc_curve
 ```
-#### (2)数据准备并分析数据
-* 从文件中读取数据，查看数据的基本信息，打印数据集中每个特征的描述性统计
+#### (2)Prepare and analyze the data
+* Read data from the file, view basic information about the data, and print descriptive statistics for each feature in the dataset
 ```
 train_df = pd.read_csv(r'D:\develop\train.csv')
 display(train_df.head())
 train_df.info()
 print(train_df.describe())
 ```
-* 绘制条形图显示5G用户分类的情况
+* Plot a bar chart to show the classification of 5G users
 ```
 print(train_df['target'].value_counts())
 train_df['target'].value_counts().plot(kind='bar')
 plt.show()
 ```
 ![dataset](./images/5G-pre.png)
-* 数据预处理，提取特征矩阵x和标签y
+* Data preprocessing, extract feature matrix X and labels y
 ```
 x = train_df.iloc[:, 1:-1]  
 y = train_df.iloc[:, -1]    
 ```
-#### (3)拆分数据集并训练模型
-* 使用train_test_split函数切分数据集为训练集和测试集
+#### (3)Split the dataset and train the model
+* Use the `train_test_split` function to split the dataset into training and testing sets
 ```
 Xtrain, Xtest, Ytrain, Ytest = train_test_split(x, y, test_size=0.2, random_state=seed)
 ```
-* 定义xgboost模型参数
+* Define XGBoost model parameters
 ```
 xgb_params = {
     'booster': 'gbtree', 
@@ -174,18 +174,18 @@ xgb_params = {
     'nthread': 16 
 }
 ```
-* 训练xgboost模型
+* Train the XGBoost model
 ```
 xgb_model = XGBClassifier(**xgb_params, eval_metric='auc', early_stopping_rounds=20)
 xgb_model.fit(Xtrain, Ytrain, eval_set=[(Xtrain,Ytrain),(Xval, Yval)], verbose=True)
 ```
-#### (4)性能评估
-* 计算并打印测试集上的AUC分数
+#### (4)Performance evaluation
+* Calculate and print the AUC score on the test set
 ```
 test_auc = roc_auc_score(Ytest, Ypred)
 print(f"Test AUC: {test_auc}")
 ```
-* 绘制ROC曲线
+* Plot the ROC curve
 ```
 fpr, tpr, thresholds = roc_curve(Ytest, Ypred)
 plt.figure(figsize=(8, 6))
